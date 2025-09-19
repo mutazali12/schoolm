@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معتز علي - مطور برمجيات فري لانسر</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://www.paypal.com/sdk/js?client-id=BAAngHuuon87MnOKw--9Z_7WaBRrlC2VHazdYJ89g0rc6S4S2Viynbcg9sK7RsrzTOxV1nstty5ZX9-mj0&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #1e3a8a, #4c1d95);
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+      color: #f1f5f9;
+      position: relative;
+    }
+    #canvas3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+    }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      margin-bottom: 2rem;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+    }
+    .whatsapp-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s ease;
+    }
+    .whatsapp-container:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .whatsapp-icon {
+      transition: all 0.3s ease;
+    }
+    .whatsapp-icon:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px #22c55e);
+    }
+    .payment-curtain {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .payment-content {
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 90%;
+      text-align: center;
+    }
+    /* Next.js-like Header and Footer */
+    header.main-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: linear-gradient(to right, #1e3a8a, #4c1d95, #1e3a8a);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 250px;
+      height: 100%;
+      background: #1f2937;
+      z-index: 100;
+      transition: right 0.3s ease-in-out;
+      box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .mobile-nav.open {
+      right: 0;
+    }
+    footer {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .section {
+        padding: 1rem;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas3d"></canvas>
+  <header class="main-header">
+    <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+      معتز علي
+    </a>
+    <button id="nav-toggle" class="text-white text-2xl">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+  <div id="mobile-nav" class="mobile-nav">
+    <button id="close-nav" class="self-end text-white text-2xl">
+      <i class="fas fa-times"></i>
+    </button>
+    <a href="#hero" class="text-white hover:text-blue-400 text-lg">الرئيسية</a>
+    <a href="#services" class="text-white hover:text-blue-400 text-lg">خدماتي</a>
+    <a href="#why-me" class="text-white hover:text-blue-400 text-lg">لماذا أنا؟</a>
+    <a href="#payment" class="text-white hover:text-blue-400 text-lg">الدفع</a>
+  </div>
+  <main class="pt-24">
+    <section class="section" id="hero">
+      <div class="card text-center max-w-2xl">
+        <h1 class="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          معتز علي
+        </h1>
+        <h2 class="text-2xl mb-6">مطور برمجيات فري لانسر - العمل عن بعد</h2>
+        <p class="mb-6 text-lg">
+          أقدم حلولاً برمجية متكاملة بأحدث التقنيات لتطوير مواقع الويب، تطبيقات الهاتف، وبرامج الحاسوب.
+          أعمل بإبداع ودقة لتحويل أفكارك إلى واقع رقمي يلبي احتياجات سوق العمل.
+        </p>
+        <div class="flex justify-center">
+          <div class="whatsapp-container">
+            <p class="text-center font-bold">تواصل معنا عبر واتساب</p>
+            <div class="flex gap-4">
+              <a href="https://wa.me/201287027277" target="_blank">
+                <i class="fab fa-whatsapp whatsapp-icon text-green-500 text-4xl"></i>
+              </a>
+              <a href="https://wa.me/249912500618" target="_blank">
+                <i class="fab fa-whatsapp whatsapp-icon text-green-500 text-4xl"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="section bg-gradient-to-b from-transparent to-blue-900/20" id="services">
+      <div class="card max-w-3xl">
+        <h2 class="text-3xl font-bold mb-6 text-center">خدماتي</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="p-4 rounded-lg bg-blue-500/20">
+            <h3 class="text-xl font-semibold mb-2">تطوير الويب</h3>
+            <p>تصميم وتطوير مواقع ويب تفاعلية ومتجاوبة باستخدام HTML، CSS، JavaScript، React، Vue.js، وNode.js.</p>
+          </div>
+          <div class="p-4 rounded-lg bg-purple-500/20">
+            <h3 class="text-xl font-semibold mb-2">تطبيقات الهاتف</h3>
+            <p>تطوير تطبيقات لنظامي iOS وAndroid باستخدام Flutter، React Native، وKotlin لتقديم تجربة مستخدم سلسة.</p>
+          </div>
+          <div class="p-4 rounded-lg bg-green-500/20">
+            <h3 class="text-xl font-semibold mb-2">برامج الحاسوب</h3>
+            <p>تصميم تطبيقات سطح المكتب باستخدام Python، C++، وElectron لتلبية احتياجات الأعمال المتنوعة.</p>
+          </div>
+        </div>
+        <p class="mt-6 text-center">
+          أستخدم أحدث أطر العمل والتقنيات مثل Django، Laravel، Firebase، وAWS لضمان الأداء العالي والأمان.
+          أقدم حلولاً مخصصة تشمل تطوير واجهات المستخدم، قواعد البيانات، وتكامل الـ APIs.
+        </p>
+      </div>
+    </section>
+    
+    <section class="section" id="why-me">
+      <div class="card max-w-3xl">
+        <h2 class="text-3xl font-bold mb-6 text-center">لماذا أنا؟</h2>
+        <ul class="list-disc pr-6">
+          <li>خبرة واسعة في تطوير الحلول البرمجية التي تلبي متطلبات السوق.</li>
+          <li>التزام بالجودة والتسليم في الوقت المحدد.</li>
+          <li>تصميمات متجاوبة تدعم جميع الأجهزة (هواتف، أجهزة لوحية، حواسيب).</li>
+          <li>دعم فني مستمر وصيانة للمشاريع بعد التسليم.</li>
+          <li>أسعار تنافسية تتناسب مع جميع الميزانيات.</li>
+        </ul>
+        <p class="mt-6 text-center">
+          سواء كنت شركة ناشئة أو مؤسسة كبيرة، أضمن لك تقديم منتج رقمي يعزز حضورك في السوق.
+        </p>
+      </div>
+    </section>
+    
+    <section class="section" id="payment">
+      <div class="card max-w-md text-center">
+        <h2 class="text-3xl font-bold mb-6">وسائل الدفع</h2>
+        <button id="paymentBtn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-semibold hover:shadow-lg transition">
+          عرض وسائل الدفع
+        </button>
+      </div>
+    </section>
+  </main>
+  
+  <div class="payment-curtain" id="paymentCurtain">
+    <div class="payment-content">
+      <h2 class="text-2xl font-bold mb-4">وسائل الدفع المتاحة</h2>
+      <p class="mb-4">يمكنك الدفع باستخدام أي من الطرق التالية:</p>
+      <ul class="list-disc pr-6 text-right">
+        <li>حساب محفظة اتصالات: <span class="font-mono">01122394912</span></li>
+        <li>حساب بنك الخرطوم: <span class="font-mono">3296130</span></li>
+        <li>حساب بنك فيصل: <span class="font-mono">51253286</span></li>
+        <li>PayPal:</li>
+      </ul>
+      <div id="paypal-container-HRPRPNKPNRMZN" class="mt-4"></div>
+      <button id="closeCurtain" class="mt-6 px-6 py-2 bg-red-500 rounded-full text-white font-semibold">إغلاق</button>
+    </div>
+  </div>
+  
+  <footer>
+    <p>تابعني على منصات التواصل الاجتماعي</p>
+    <div class="flex gap-4 text-2xl">
+      <a href="https://www.facebook.com" target="_blank" class="text-blue-400 hover:text-blue-600 transition">
+        <i class="fab fa-facebook-square"></i>
+      </a>
+      <a href="https://www.twitter.com" target="_blank" class="text-blue-400 hover:text-blue-600 transition">
+        <i class="fab fa-twitter-square"></i>
+      </a>
+      <a href="https://www.linkedin.com" target="_blank" class="text-blue-400 hover:text-blue-600 transition">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </div>
+  </footer>
+  
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row =>
+            row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+          );
+          var csv = XLSX.utils.aoa_to_sheet(filteredData);
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
+  <script>
+    // Initialize PayPal Button
+    paypal.HostedButtons({
+      hostedButtonId: "HRPRPNKPNRMZN",
+    }).render("#paypal-container-HRPRPNKPNRMZN");
+  
+    // 3D Background Animation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  
+    const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+    const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true });
+    const torusKnot = new THREE.Mesh(geometry, material);
+    scene.add(torusKnot);
+  
+    camera.position.z = 30;
+  
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      torusKnot.rotation.x += 0.01;
+      torusKnot.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+    animate3D();
+  
+    // Window Resize Handler
+    window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+  
+    // GSAP Animations
+    gsap.from(".card", {
+      opacity: 0,
+      y: 50,
+      stagger: 0.3,
+      duration: 1,
+      ease: "power3.out",
+    });
+  
+    // Payment Curtain Logic
+    const paymentBtn = document.getElementById('paymentBtn');
+    const paymentCurtain = document.getElementById('paymentCurtain');
+    const closeCurtain = document.getElementById('closeCurtain');
+  
+    paymentBtn.addEventListener('click', () => {
+      paymentCurtain.style.display = 'flex';
+      gsap.from(".payment-content", {
+        y: -100,
+        opacity: 0,
+        duration: 0.8,
+        ease: "bounce.out",
+      });
+    });
+  
+    closeCurtain.addEventListener('click', () => {
+      gsap.to(".payment-content", {
+        y: -100,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.in",
+        onComplete: () => {
+          paymentCurtain.style.display = 'none';
+        },
+      });
+    });
+
+    // Side Navigation Logic
+    const navToggle = document.getElementById('nav-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    const closeNav = document.getElementById('close-nav');
+    
+    navToggle.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+    });
+    
+    closeNav.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
