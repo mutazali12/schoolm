@@ -160,18 +160,23 @@
     <button id="close-nav" class="self-end text-white text-2xl">
       <i class="fas fa-times"></i>
     </button>
-    <a href="#hero" class="text-white hover:text-blue-400 text-lg">الرئيسية</a>
-    <a href="#services" class="text-white hover:text-blue-400 text-lg">خدماتي</a>
-    <a href="#why-me" class="text-white hover:text-blue-400 text-lg">لماذا أنا؟</a>
-    <a href="#payment" class="text-white hover:text-blue-400 text-lg">الدفع</a>
+    <h3 class="text-xl font-bold text-gray-300 mb-4">خدماتي</h3>
+    <a href="#services" class="text-white hover:text-blue-400 text-lg">موقع إلكتروني</a>
+    <a href="#" class="text-white hover:text-blue-400 text-lg">إستضافة و دومين</a>
+    <a href="#" class="text-white hover:text-blue-400 text-lg">تطبيق ويب</a>
+    <a href="#download" class="text-white hover:text-blue-400 text-lg">تطبيق هاتف</a>
+    <a href="#" class="text-white hover:text-blue-400 text-lg">برنامج حاسوب</a>
   </div>
   <main class="pt-24">
     <section class="section" id="hero">
       <div class="card text-center max-w-2xl">
-        <h1 class="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-          معتز علي
-        </h1>
-        <h2 class="text-2xl mb-6">مطور برمجيات فري لانسر - العمل عن بعد</h2>
+        <div class="p-6 rounded-lg mb-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
+          <h1 class="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            معتز علي
+          </h1>
+          <h2 class="text-2xl">مطور برمجيات فري لانسر</h2>
+        </div>
+        <h2 class="text-2xl mb-6">العمل عن بعد</h2>
         <p class="mb-6 text-lg">
           أقدم حلولاً برمجية متكاملة بأحدث التقنيات لتطوير مواقع الويب، تطبيقات الهاتف، وبرامج الحاسوب.
           أعمل بإبداع ودقة لتحويل أفكارك إلى واقع رقمي يلبي احتياجات سوق العمل.
@@ -229,6 +234,21 @@
         <p class="mt-6 text-center">
           سواء كنت شركة ناشئة أو مؤسسة كبيرة، أضمن لك تقديم منتج رقمي يعزز حضورك في السوق.
         </p>
+      </div>
+    </section>
+
+    <section class="section" id="download">
+      <div class="card max-w-md text-center">
+        <h2 class="text-3xl font-bold mb-6">تحميل التطبيق</h2>
+        <p class="mb-4">يمكنك تحميل تطبيق الهاتف من المتاجر التالية:</p>
+        <div class="flex justify-center gap-6">
+          <a href="/apk/mutazFL.apk" download>
+            <i class="fab fa-google-play text-white text-5xl hover:text-green-500 transition"></i>
+          </a>
+          <a href="/ios/mutazFL.ipa" download>
+            <i class="fab fa-apple text-white text-5xl hover:text-gray-400 transition"></i>
+          </a>
+        </div>
       </div>
     </section>
     
@@ -366,7 +386,7 @@
         },
       });
     });
-
+    
     // Side Navigation Logic
     const navToggle = document.getElementById('nav-toggle');
     const mobileNav = document.getElementById('mobile-nav');
@@ -379,6 +399,7 @@
     closeNav.addEventListener('click', () => {
       mobileNav.classList.remove('open');
     });
+    
   </script>
 </body>
 </html>
